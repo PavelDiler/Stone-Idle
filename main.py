@@ -28,8 +28,8 @@ stone_x = 400
 stone_y = 130
 stone_size = 200
 
-mountain_x = 30
-mountain_y = 280
+mountain_x = 0
+mountain_y = 288
 
 money = 0
 
@@ -147,7 +147,8 @@ for i in range(1, 6):
     stones.append(image)
 
 mountain = load_image(
-    os.path.join(ASSETS, "mountain.png")
+    os.path.join(ASSETS, "mountain.png"),
+    (256 , 192)
 )
 
 if mountain is None:
@@ -507,8 +508,8 @@ while running:
     update_particles()
 
     draw_background()
-    draw_menu()
     draw_mountain()
+    draw_menu()
     draw_stone()
     draw_particles()
     draw_damage_numbers()
