@@ -1,4 +1,3 @@
-
 import pygame
 import sys
 import os
@@ -18,6 +17,12 @@ clock = pygame.time.Clock()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(BASE_DIR, "assets")
+
+icon = pygame.image.load(
+    os.path.join(ASSETS, "icon.png")
+).convert_alpha()
+
+pygame.display.set_icon(icon)
 
 stone_x = 400
 stone_y = 130
@@ -67,8 +72,11 @@ disabled_color = (45, 50, 65)
 white = (255, 255, 255)
 gold = (255, 205, 60)
 
-font = pygame.font.SysFont("arial", 20)
-big_font = pygame.font.SysFont("arial", 28)
+font = pygame.font.SysFont("arial", 18)
+upgrade_title_font = pygame.font.SysFont("arial", 17)
+upgrade_detail_font = pygame.font.SysFont("arial", 15)
+page_font = pygame.font.SysFont("arial", 17)
+big_font = pygame.font.SysFont("arial", 26)
 damage_font = pygame.font.SysFont("arial", 26, bold=True)
 
 
@@ -109,22 +117,22 @@ money_icon = load_image(
 
 damage_icon = load_image(
     os.path.join(ASSETS, "icons", "damage.png"),
-    (32, 32)
+    (24, 24)
 )
 
 reward_icon = load_image(
     os.path.join(ASSETS, "icons", "reward.png"),
-    (32, 32)
+    (24, 24)
 )
 
 crit_chance_icon = load_image(
     os.path.join(ASSETS, "icons", "crit_chance.png"),
-    (32, 32)
+    (24, 24)
 )
 
 crit_multiplier_icon = load_image(
     os.path.join(ASSETS, "icons", "crit_multiplier.png"),
-    (32, 32)
+    (24, 24)
 )
 
 stones = []
@@ -238,14 +246,21 @@ def draw_mountain():
 
 
 def draw_upgrade_row(icon, title, detail, y, color):
+    icon_y = y + 57
+    text_y = y + 50
+
+    if icon is reward_icon or icon is crit_multiplier_icon:
+        icon_y -= 10
+        text_y -= 10
+
     if icon:
-        screen.blit(icon, (40, y + 8))
+        screen.blit(icon, (52, icon_y))
 
-    title_text = font.render(title, True, color)
-    detail_text = font.render(detail, True, color)
+    title_text = upgrade_title_font.render(title, True, color)
+    detail_text = upgrade_detail_font.render(detail, True, color)
 
-    screen.blit(title_text, (82, y + 3))
-    screen.blit(detail_text, (82, y + 27))
+    screen.blit(title_text, (86, text_y))
+    screen.blit(detail_text, (86, text_y + 20))
 
 
 def draw_menu():
@@ -269,14 +284,14 @@ def draw_menu():
         pygame.draw.rect(
             screen,
             button_color,
-            (30, 100, 236, 60),
+            (30, 100, 236, 80),
             border_radius=8
         )
 
         pygame.draw.rect(
             screen,
             button_color,
-            (30, 170, 236, 30),
+            (30, 180, 236, 30),
             border_radius=6
         )
 
@@ -341,13 +356,14 @@ def draw_menu():
             multiplier_color
         )
 
-    page_text = font.render(
+    page_text = page_font.render(
         "Страница " + str(menu_page) + " / 2",
         True,
         white
     )
 
-    screen.blit(page_text, (95, 174))
+    page_rect = page_text.get_rect(center=(142, 195))
+    screen.blit(page_text, page_rect)
 
 
 def draw_money():
@@ -453,8 +469,8 @@ while running:
             )
 
             first_button = pygame.Rect(30, 30, 236, 60)
-            second_button = pygame.Rect(30, 100, 236, 60)
-            page_button = pygame.Rect(30, 170, 236, 30)
+            second_button = pygame.Rect(30, 100, 236, 80)
+            page_button = pygame.Rect(30, 180, 236, 30)
 
             if stone_rect.collidepoint(mouse_x, mouse_y):
                 hit_stone(mouse_x, mouse_y)
